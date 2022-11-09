@@ -195,6 +195,18 @@ public class Program
         return max;
     }
 
+    public static string TrueAlphabetic(string txt)
+    {
+        List<LetterSlot> slots = txt.Select(i => new LetterSlot(i)).ToList();
+        List<char> letters = txt.Replace(" ", "").ToCharArray().ToList();
+        letters.Reverse();
+        foreach (var i in slots.Where(x => x.Letter != ' '))
+        {
+            i.Letter = letters[0];
+            letters.RemoveAt(0);
+        }
+        return string.Join("", slots.Select(x => x.GetChar()));
+    }
 
     class LetterSlot
     {
@@ -217,24 +229,8 @@ public class Program
         }
     }
 
-    public static void TestCase(dynamic value, dynamic expected)
+    public static void TestCase(dynamic value, dynamic expected, dynamic result)
     {
-        string TrueAlphabetic(string txt)
-        {
-            List<LetterSlot> slots = txt.Select(i => new LetterSlot(i)).ToList();
-            List<char> letters = txt.Replace(" ", "").ToCharArray().ToList();
-            letters.Reverse();
-            foreach (var i in slots.Where(x => x.Letter != ' '))
-            {
-                i.Letter = letters[0];
-                letters.RemoveAt(0);
-            }
-            return string.Join("", slots.Select(x => x.GetChar()));
-
-
-        }
-
-        dynamic result = (TrueAlphabetic(value));
         if (result == expected)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -249,24 +245,14 @@ public class Program
 
     public static void Main(string[] args)
     {
-        TestCase("Edabit", "Tibade");
-        TestCase("UPPER lower", "REWOL reppu");
-        TestCase("1 23 456", "6 54 321");
-        TestCase("Hello World!", "!dlro Wolleh");
-        TestCase("Where's your dog Daisy?", "?ysiadg odru oys 'erehw");
-        TestCase("addition(3, 2) = 5", "5=)2,3(noit id d a");
+        TestCase("Edabit", "Tibade", TrueAlphabetic("Edabit"));
+        TestCase("UPPER lower", "REWOL reppu", TrueAlphabetic("Edabit"));
+        TestCase("1 23 456", "6 54 321", TrueAlphabetic("Edabit"));
+        TestCase("Hello World!", "!dlro Wolleh", TrueAlphabetic("Edabit"));
+        TestCase("Where's your dog Daisy?", "?ysiadg odru oys 'erehw", TrueAlphabetic("Edabit"));
+        TestCase("addition(3, 2) = 5", "5=)2,3(noit id d a", TrueAlphabetic("Edabit"));
         TestCase("It's known that CSS means Cascading Style Sheets",
-            "Stee hsely tsgn IDA csacs Naemsscta Htnwo Nks'ti");
-
-        string TrueAlphabetic(string str)
-        {
-            List<char> alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToList();
-            List<string> words = str.Split(' ').ToList();
-            List<string> wordsSorted = words.Select(i => new string(i.OrderBy(x => alpha.IndexOf(x)).ToArray())).ToList();
-
-            return wordsSorted.Aggregate((x, y) => x + " " + y);
-        }
-        Console.WriteLine(TrueAlphabetic("BEB RA"));
+            "Stee hsely tsgn IDA csacs Naemsscta Htnwo Nks'ti", TrueAlphabetic("Edabit"));
     }
 }
 
